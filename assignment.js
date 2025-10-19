@@ -134,22 +134,106 @@ class Sphere {
   }
 }
 
+class blackSphere {
+  constructor(x, y, z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
+
+  draw() {
+    push();
+    translate(this.x, this.y, this.z);
+    let c = color(255);
+    pointLight(c, 0, -150, 0);
+
+    // c = color(221, 102, 255);
+    // pointLight(c, 0, 150, 0);
+
+    // ambientLight(221, 102, 255);
+    ambientLight(0);
+
+    rotateZ(frameCount * 0.6);
+    // rotateY(frameCount * 0.6);
+    rotateX(frameCount * 0.6);
+
+    fill(255, 150);
+    // noStroke();
+    stroke(255);
+    strokeWeight(0.5);
+
+    let r = 130;
+    // have found out how to do the sphere from this https://www.youtube.com/watch?v=SGHWZz5Mrsw
+    for (let phi = 0; phi < 180; phi += 5) {
+      beginShape();
+      for (let theta = 0; theta < 360; theta += 5) {
+        let x1 = r * cos(phi);
+        let y1 = r * sin(phi) * sin(theta);
+        let z1 = r * sin(phi) * cos(theta);
+        point(x1, y1, z1);
+      }
+      endShape();
+    }
+    pop();
+  }
+}
+
+class weirdSphere {
+  constructor(x, y, z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
+  draw() {
+    push();
+    translate(this.x, this.y, this.z);
+
+    rotateZ(frameCount * 0.6);
+    // rotateY(frameCount * 0.6);
+    rotateX(frameCount * 0.6);
+
+    // fill(255, 150);
+    // noStroke();
+    noFill();
+    stroke(255);
+    strokeWeight(2);
+
+    let r = 280;
+    // have found out how to do the sphere from this https://www.youtube.com/watch?v=SGHWZz5Mrsw
+
+    beginShape();
+    for (let theta = 0; theta < 360; theta += 0.2) {
+      let x1 = r * cos(theta * 6);
+      let y1 = r * sin(theta * 6) * sin(theta);
+      let z1 = r * sin(theta * 6) * cos(theta);
+      vertex(x1, y1, z1);
+    }
+    endShape();
+
+    pop();
+  }
+}
+
 let alien;
-let x = innerWidth / 10;
-let y = innerHeight / 2;
+// let x = innerWidth / 10;
+// let y = innerHeight / 2;
 // taken from Force example 2
 let element;
 let gravity;
-const c = 2;
+const c = 0.2;
 let synth;
 
 let counter = 0;
-let counter2 = 0;
+
 let trigger_rect = true;
 let first_Screen = true;
 let second_screen = false;
 
 let r = 280;
+
+let noiseMax = 0.5;
+let slider;
+let zoff = 0;
 
 window.addEventListener("load", () => {
   synth = new Tone.PolySynth().toDestination();
@@ -176,7 +260,7 @@ function setup() {
   createCanvas(innerWidth, innerHeight, WEBGL);
   gravity = createVector(0, 10);
 
-  alien = new Alien(x, y);
+  alien = new Alien(width / 10, height / 2);
 
   rectangle1 = new Rectangle(width / 2, height / 3);
   rectangle2 = new Rectangle(width / 3, height / 2);
@@ -191,6 +275,8 @@ function setup() {
   rectangle10 = new Rectangle(width / 2 + width / 3.8, height / 3);
 
   alien_sphere = new Sphere(200, 10, 200);
+  black_sphere = new blackSphere(20, 100, -200);
+  final_sphere = new weirdSphere(200, 10, 200);
 }
 
 function draw() {
@@ -281,7 +367,7 @@ function draw() {
       rect(width / 3 + width / 16, 0, 150, height);
       pop();
     }
-    if (counter >= 12) {
+    if (counter === 12) {
       push();
       noStroke();
       fill(51, 238, 34);
@@ -289,7 +375,7 @@ function draw() {
       rect(width / 3 + width / 15, 0, 300, height);
       pop();
     }
-    if (counter >= 13) {
+    if (counter === 13) {
       push();
       noStroke();
       fill(51, 238, 34);
@@ -297,7 +383,7 @@ function draw() {
       rect(width / 3 + width / 15, 0, 450, height);
       pop();
     }
-    if (counter >= 14) {
+    if (counter === 14) {
       push();
       noStroke();
       fill(51, 238, 34);
@@ -305,7 +391,7 @@ function draw() {
       rect(width / 3 + width / 15, 0, 600, height);
       pop();
     }
-    if (counter >= 15) {
+    if (counter === 15) {
       push();
       noStroke();
       fill(51, 238, 34);
@@ -313,7 +399,7 @@ function draw() {
       rect(width / 3 + width / 15, 0, 750, height);
       pop();
     }
-    if (counter >= 16) {
+    if (counter === 16) {
       push();
       noStroke();
       fill(51, 238, 34);
@@ -332,19 +418,105 @@ function draw() {
       translate(width / 2, height / 2);
       alien_sphere.draw();
       pop();
+    }
 
+    if (counter >= 20) {
+      push();
+      noStroke();
+      fill(51, 238, 34);
+      //   fill(255, 100);
+      rect(width / 5, 0, 300, height);
+      pop();
+    }
+
+    if (counter >= 21) {
+      push();
+
+      noFill();
+      stroke(255);
+      strokeWeight(5);
+
+      beginShape();
+      for (let y = 0; y < height; y++) {
+        const x = width / 4 + noise(y / 60) * 100;
+        point(x, y);
+      }
+      endShape();
+
+      pop();
+    }
+    if (counter >= 22) {
+      push();
+
+      noFill();
+      stroke(255);
+      strokeWeight(5);
+
+      beginShape();
+      for (let z = 0; z < height; z++) {
+        const t = width / 3.2 + noise(z / 100) * 100;
+        point(t, z);
+      }
+      endShape();
+      pop();
+    }
+    if (counter >= 23) {
+      push();
+      black_sphere.draw();
       pop();
     }
 
     pop();
 
-    // if (counter2 >= 2) {
-    //   push();
-    //   noStroke();
-    //   fill(51, 238, 34);
-    //   rect(width / 3 + width / 16, 0, 150 * counter2, height);
-    //   pop();
-    // }
+    if (counter >= 25) {
+      background(0);
+      push();
+      translate(500, 450);
+      final_sphere.draw();
+      pop();
+
+      // noise lines
+      push();
+      noFill();
+      stroke(255);
+      strokeWeight(5);
+
+      beginShape();
+      for (let z = 0; z < height; z++) {
+        const t = width / 2 + 300 + noise(z / 100) * 100;
+        point(t, z);
+      }
+      endShape();
+
+      beginShape();
+      for (let z = 0; z < height; z++) {
+        const t = width / 2 + 400 + noise(z / 60) * 100;
+        point(t, z);
+      }
+      endShape();
+
+      beginShape();
+      for (let z = 0; z < height; z++) {
+        const t = width / 2 + 500 + noise(z / 120) * 100;
+        point(t, z);
+      }
+      endShape();
+
+      beginShape();
+      for (let z = 0; z < height; z++) {
+        const t = width / 2 + 600 + noise(z / 80) * 100;
+        point(t, z);
+      }
+      endShape();
+
+      beginShape();
+      for (let z = 0; z < height; z++) {
+        const t = width / 2 + 700 + noise(z / 150) * 100;
+        point(t, z);
+      }
+      endShape();
+      pop();
+    }
   }
 }
 
