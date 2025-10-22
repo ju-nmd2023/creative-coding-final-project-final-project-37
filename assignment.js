@@ -220,7 +220,7 @@ let alien;
 // taken from Force example 2
 let element;
 let gravity;
-const c = 0.2;
+const c = 3;
 let synth;
 
 let counter = 0;
@@ -234,6 +234,9 @@ let r = 280;
 let noiseMax = 0.5;
 let slider;
 let zoff = 0;
+
+//  found out about audio on https://stackoverflow.com/questions/9419263/how-to-play-audio
+const audio = new Audio("Ufo＿music.mp3");
 
 window.addEventListener("load", () => {
   synth = new Tone.PolySynth().toDestination();
@@ -281,6 +284,7 @@ function setup() {
 
 function draw() {
   background(0);
+  audio.play();
   push();
   translate(-width / 2, -height / 2);
   // image(pg, width / 2, 250);
